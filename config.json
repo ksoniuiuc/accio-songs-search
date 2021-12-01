@@ -1,0 +1,29 @@
+{
+    "appsearch":{
+        "base_endpoint":"http://localhost:3002",
+        "api_key":"private-t9mc7n15fbkqt2er6mpd16go",
+        "engine_name":"accio-songs"
+    },
+    "musix_match_api":{
+        "url":"https://api.musixmatch.com/ws/1.1/",
+        "key":"&apikey=f0d627bb2b53f71131e082482f0d1dc0",
+        "format":"?format=json&callback=callback"
+    },
+    "spotify_api_auth":{
+        "url":"https://accounts.spotify.com/authorize?",
+        "client_id":"565d0751a4944284b5403077e09ef1dd",
+        "response_type":"code",
+        "redirect_uri":"http://localhost:3002",
+        "scope":"user-library-read",
+        "client_secret":"b9d2342b629e4107aac616535a6702c9",
+        "Authorization": "Authorization: Basic NTY1ZDA3NTFhNDk0NDI4NGI1NDAzMDc3ZTA5ZWYxZGQ6YjlkMjM0MmI2MjllNDEwN2FhYzYxNjUzNWE2NzAyYzk=",
+        "grant_type": "authorization_code"
+
+    },
+    "genius_api":{
+        "url":"https://api.genius.com/search?q=",
+        "client_id":"v00yIU5wjmIzgH1wkCet_klOjQ7K8Kg5Xf8vtF0e0BNgIxxQclth2FT9-FuaC8H9",
+        "client_secret":"WNB3lqEREcWJ4Doz_SQd9gSpOBDNA3Nh3nFhVpU6CQEN5Xsf1DLiR4GmR6Ei_2QaXww9d0-BewH8cUF13_5nuQ",
+        "access_token": "4fai3aBQ9kO_AYDFgyzhhLaVrmj41JgnkR2HW3a6Zy9eHUHXhVpllGgsuVCqdDh9"
+    }
+}

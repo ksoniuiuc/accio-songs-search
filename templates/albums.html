@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="justify-items-center">
+    <div id="parent-div" class="grid gap-8 grid-cols-3 mt-5 ">
+        <script type="text/javascript">
+            var data_list = {{ data['results'] | tojson | safe }};
+            console.log(data_list);
+            var toAdd = document.createDocumentFragment();
+            for (let index in data_list) {
+                var item = data_list[index];
+                var artist_name = JSON.parse(item.artists.raw[0]);
+                var newDiv = document.createElement('div');
+                newDiv.id = 'result-div' + index;
+                newDiv.className = 'transition duration-500 ease-in-out flex py-3 px-2 hover:bg-blue-400 transform hover:-translate-y-1 hover:scale-110 hover:text-white hover:shadow-none hover:rounded border border-gray-300 shadow-lg';
+                newDiv.innerHTML = '<img id="artist_image" src="' + item.image.raw + '" class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
+                var innerDiv = document.createElement('div');
+                innerDiv.id = 'inner-div' + index;
+                innerDiv.className = 'w-3/5 mr-0';
+                innerDiv.innerHTML = '<h2 class="text-gray-800 font-bold">' + item.name.raw + '</h2>';
+                innerDiv.innerHTML += '<p>Artist: ' + artist_name.name + '</p>';
+                innerDiv.innerHTML += '<p>No. of tracks: ' + item.total_tracks.raw + '</p>';
+                innerDiv.innerHTML += '<p>Released On: ' + item.release_date.raw + '</p>';
+                toAdd.appendChild(newDiv);
+                newDiv.appendChild(innerDiv);
+            };
+            document.getElementById('parent-div').appendChild(toAdd);
+        </script>
+    </div>
+</div>
+{% endblock %}

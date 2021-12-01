@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accio Songs - Music Search</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main_min.css')}}">
+    <link rel="shortcut icon" href="#">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+    <div class="bg-gray-700 px-3 py-1">
+        <h2 class="text-3xl font-light text-white m-0">Accio Songs - Home</h2>
+    </div>
+    <div class="justify-center pl-60 ml-96">
+        <form id="form" method="POST">
+            <input type="text" placeholder="Search here..." name="{{ search_type_value }}_form"
+                class="border-2 border-gray-700 mt-10 w-2/5 py-3 px-4"></input>
+            <button class="bg-blue-700 text-xl hover:bg-blue-500 text-white py-2 px-3">
+                Search
+            </button>
+            <p>Select Search Type:</p>
+
+            <div>
+                <input type="radio" id="artists" name="search_type" value="artists" checked>
+                <label for="artist">Artists</label>
+            </div>
+            <div>
+                <input type="radio" id="albums" name="search_type" value="albums">
+                <label for="track">Albums</label>
+            </div>
+            <div>
+                <input type="radio" id="tracks" name="search_type" value="tracks">
+                <label for="track">Tracks</label>
+            </div>
+            <div>
+                <input type="radio" id="lyrics" name="search_type" value="lyrics">
+                <label for="lyrics">Lyrics</label>
+            </div>
+            <p id="search_type">{{ search_type_value }}</p>
+            <script>
+                $(document).ready(function() {
+                    $('radio').click(function() {
+                        var search_type_value = $("input[type=radio][name=search_type]:checked").val();
+                        if (search_type_value) {
+                            console.log(search_type_value)
+                        }
+                        else {
+                            alert('Nothing is selected');
+                        }
+                        document.getElementById("form").action = search_type_value;
+                    })
+                });
+            </script>
+
+
+        </form>
+        <p class='text-xl mt-10 block font-bold justify-center'>{{api_response}}</p>
+
+
+    </div>
+    {% block content %}{% endblock %}
+</body>
+
+</html>
