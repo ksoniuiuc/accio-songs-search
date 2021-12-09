@@ -64,7 +64,7 @@ class SPOTIFY:
 
         elif search_type == 'album-tracks':
             spotify_data = self.spotify_object.album_tracks(album_id=query, limit=10)
-            with open('data/tracks_all.json', 'w') as data_file:
+            with open('data/tracks_all.json', 'w+') as data_file:
                 json.dump(spotify_data, data_file)
 
         elif search_type == 'track-details':
@@ -76,7 +76,7 @@ class SPOTIFY:
         
         if 'artists' == search_type:            
             artists_api_data = spotify_data['artists']['items']
-            with open('data/artists_all.json', 'w') as data_file:
+            with open('data/artists_all.json', 'w+') as data_file:
                 json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
         
@@ -96,7 +96,7 @@ class SPOTIFY:
                     all_artist_data.append(artist_data)
             
             if all_artist_data:
-                with open('data/artists.json', 'w') as data_file:
+                with open('data/artists.json', 'w+') as data_file:
                     json.dump(all_artist_data, data_file)
                 result = all_artist_data
 
@@ -106,7 +106,7 @@ class SPOTIFY:
                 album_api_data = spotify_data['albums']['items']
             else:
                 album_api_data = spotify_data['items']
-            with open('data/albums_all.json', 'w') as data_file:
+            with open('data/albums_all.json', 'w+') as data_file:
                 json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
@@ -126,7 +126,7 @@ class SPOTIFY:
                     all_album_data.append(album_data)
             
             if all_album_data:
-                with open('data/albums.json', 'w') as data_file:
+                with open('data/albums.json', 'w+') as data_file:
                     json.dump(all_album_data, data_file)
                 result = all_album_data
         
@@ -138,7 +138,7 @@ class SPOTIFY:
                 album_data = self.spotify_object.album(album_id=query)
                 track_api_data = album_data['tracks']['items']
             
-            with open('data/tracks_all.json', 'w') as data_file:
+            with open('data/tracks_all.json', 'w+') as data_file:
                 json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
@@ -182,7 +182,7 @@ class SPOTIFY:
                     all_track_data.append(track_data)
             
             if all_track_data:
-                with open('data/tracks.json', 'w') as data_file:
+                with open('data/tracks.json', 'w+') as data_file:
                     json.dump(all_track_data, data_file)
                 result = all_track_data
 
@@ -213,7 +213,7 @@ class SPOTIFY:
             track_artist_genius = track['artists'][0]['name']
             track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
 
-            with open('data/lyrics.json', 'w') as data_file:
+            with open('data/lyrics.json', 'w+') as data_file:
                     json.dump(track_data, data_file)
             result = track_data
 

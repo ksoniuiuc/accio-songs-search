@@ -68,7 +68,7 @@ def artists(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -110,7 +110,7 @@ def albums(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -157,7 +157,7 @@ def artist_albums(artist_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
     #print(data['results'])
     search_type = 'albums'
@@ -203,7 +203,7 @@ def tracks(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -252,7 +252,7 @@ def album_tracks(album_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
 
     search_type = 'tracks'
@@ -302,7 +302,7 @@ def track_details(track_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
     
     search_type = 'tracks'

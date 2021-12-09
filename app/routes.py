@@ -46,7 +46,7 @@ def artists(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -88,7 +88,7 @@ def albums(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -135,7 +135,7 @@ def artist_albums(artist_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
     #print(data['results'])
     search_type = 'albums'
@@ -181,7 +181,7 @@ def tracks(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -230,7 +230,7 @@ def album_tracks(album_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
 
     search_type = 'tracks'
@@ -277,7 +277,7 @@ def lyrics(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w') as outfile:
+            with open('data/data.json', 'w+') as outfile:
                 json.dump(data, outfile)
         #print(data['results'])
     else:
@@ -346,7 +346,7 @@ def read(query, search_type):
     data = [item['track'] for item in data['message']["body"]['track_list']]
     #print(data)
     if data:
-        with open('data/data.json', 'w') as outfile:
+        with open('data/data.json', 'w+') as outfile:
             json.dump(data, outfile)
         response = client.index_documents(engine_name, data)
         time.sleep(0.1)
