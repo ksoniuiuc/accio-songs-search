@@ -3,6 +3,5 @@ bin/
 include/
 lib/
 pyvenv.cfg
-.cache
 log/*
 data/*.json
