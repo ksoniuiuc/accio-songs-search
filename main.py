@@ -29,12 +29,9 @@ spotify_obj = SPOTIFY(config)
 # Home page Route definition
 @app.route("/", methods=['GET'])
 def home():
-    data = client.search(engine_name, body={
-        "query": ""
-    })
-
+    
     # Initializing default Search Type to "artist"
-    return render_template("layout.html", data=data['results'], search_type="")
+    return render_template("layout.html", search_type="")
 
 
 @app.route("/artists/<query>", methods=['GET', 'POST'])
