@@ -14,37 +14,32 @@
                     artist_name += artist.name + '; ';
                 };
                 artist_name = artist_name.slice( 0, artist_name.length - 2 );
-                console.log(artist_name);
+                
+                album_name = item.album.raw;
                 
                 var newAtag = document.createElement('a');
-
+                
                 var newDiv = document.createElement('div');
                 newDiv.id = 'result-div' + index;
                 newDiv.className = 'transition duration-500 ease-in-out flex py-3 px-2 hover:bg-blue-400 transform hover:-translate-y-1 hover:scale-110 hover:text-white hover:shadow-none hover:rounded border border-gray-300 shadow-lg';
-                
-                var images = item.image.raw;
-                console.log(typeof images)
-                console.log(images)
-                if (images.length == 0) {
-                    var image = "../static/images/no-image-icon.jpg";
-                }
-                else {
-                    console.log(typeof images[0]);
-                    console.log(images[0]);
-                    var image = JSON.parse(images[0]).url;
-                };
-                newDiv.innerHTML = '<img src=' + image + ' class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
-                
+                newDiv.innerHTML = '<img id="artist_image" src="' + item.image.raw + '" class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
                 var innerDiv = document.createElement('div');
                 innerDiv.id = 'inner-div' + index;
                 innerDiv.className = 'w-3/5 mr-0';
                 innerDiv.innerHTML = '<h2 class="text-xl font-bold">' + item.name.raw + '</h2><br/>';
-                innerDiv.innerHTML += '<p>Artist: ' + artist_name + '</p>';
-                innerDiv.innerHTML += '<p>No. of tracks: ' + item.total_tracks.raw + '</p>';
-                innerDiv.innerHTML += '<p>Released On: ' + item.release_date.raw + '</p>';
+                innerDiv.innerHTML += '<p><strong>Album:</strong> ' + album_name + '</p>';
+                innerDiv.innerHTML += '<p><strong>Artist:</strong> ' + artist_name + '</p>';
+                innerDiv.innerHTML += '<p><strong>Duration:</strong> ' + item.duration.raw + ' minutes</p><br/>';
+                if (item.preview_url.raw) {
+                    innerDiv.innerHTML += '<audio controls> <source src=' + item.preview_url.raw + 'type="audio/mpeg">'+
+                                        'Your browser does not support the audio element. </audio>';
+                }
+                else {
+                    innerDiv.innerHTML += '<p>Oops!! No Preview</p>';
+                }
                 
-                newAtag.href = "../../../album_tracks/id/"+item.spotify_id.raw;
-                
+                newAtag.href = "../../../track_details/id/"+item.spotify_id.raw;
+                newAtag.target = "_blank";
                 newDiv.appendChild(innerDiv);
                 newAtag.appendChild(newDiv);
                 toAdd.appendChild(newAtag);

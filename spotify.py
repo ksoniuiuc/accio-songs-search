@@ -1,54 +1,91 @@
+import base64
 import os
 import json
+from lyricsgenius import genius
+import requests
+import six
 
 import spotipy
 
 from spotipy.oauth2 import SpotifyOAuth
 
+
+# Genius Class Import
+from genius import GENIUS
+
+# def _make_authorization_headers(client_id, client_secret):
+#     auth_header = base64.b64encode(six.text_type(client_id + ':' + client_secret).encode('ascii'))
+#     return {'Authorization': 'Basic %s' % auth_header.decode('ascii')}
+
 class SPOTIFY:
 
-    def __init__(self, config):
-        authObject = spotipy.SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
+    def __init__(self, config) -> None:
+        self.authObject = spotipy.SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
                                         client_secret=config["spotify_api_auth"]["client_secret"],
                                         redirect_uri=config["spotify_api_auth"]["redirect_uri"],
                                         scope=config["spotify_api_auth"]["scope"])
 
-        print(authObject)
+        print(self.authObject)
 
-        token_dict = authObject.get_access_token()
+        self.token_dict = self.authObject.get_access_token()
+        #token_dict = authObject.get_cached_token()
 
-        print(token_dict)
+        print(self.token_dict)
 
-        self.access_token = token_dict["access_token"]
+        self.access_token = self.token_dict["access_token"]
 
         self.spotify_object = spotipy.Spotify(auth=self.access_token)
 
+    
         print(self.spotify_object)
 
+        # Spotify API Details
+        self.genius_obj = GENIUS(config)
 
-        # results = sp.current_user_saved_tracks()
-        # for idx, item in enumerate(results['items']):
-        #     track = item['track']
-        #     print(idx, track['artists'][0]['name'], " – ", track['name'])
+        print(self.genius_obj)
 
 
-        # sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=config["spotify_api_auth"]["client_id"],
-        #                                                            client_secret=config["spotify_api_auth"]["client_secret"]))
+
 
     def get_data(self, query, search_type):
+        if self.authObject.is_token_expired(self.token_dict):
+            print("TOKEN EXPIRED !!!!")
+            token_data = self.authObject.get_cached_token()
+            print(token_data)
+            self.access_token = self.authObject.refresh_access_token(token_data['refresh_token'])
+            print(self.access_token)
+            self.spotify_object = spotipy.Spotify(auth=self.access_token)
+            print(self.spotify_object)
+            
         result = {}
+        spotify_data = {}
+        if search_type == 'artist-albums':
+            spotify_data = self.spotify_object.artist_albums(artist_id=query, limit=10)
+
+        elif search_type == 'album-tracks':
+            spotify_data = self.spotify_object.album_tracks(album_id=query, limit=10)
+            with open('data/tracks_all.json', 'w') as data_file:
+                json.dump(spotify_data, data_file)
+
+        elif search_type == 'track-details':
+            track_id = query
+            #spotify_data = self.spotify_object.track(q=track_id, type='track', limit=1)
+
+        else:            
+            spotify_data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=10)
         
-        data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=10)
-        
-        if 'artists' == search_type:
+        if 'artists' == search_type:            
+            artists_api_data = spotify_data['artists']['items']
             with open('data/artists_all.json', 'w') as data_file:
-                json.dump(data, data_file)
+                json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
         
             all_artist_data = []
             
-            for artist in data['artists']['items']:
+            for artist in artists_api_data:
                 artist_data = {}
+                artist_data['type'] = 'artist'
+                artist_data['spotify_id'] = artist['id']
                 artist_data['id'] = artist['id']
                 artist_data['name'] = artist['name']
                 artist_data['followers'] = artist['followers']['total']
@@ -64,22 +101,27 @@ class SPOTIFY:
                 result = all_artist_data
 
 
-        elif 'albums' == search_type:
-            album_data = data['albums']['items']
+        elif search_type in ('albums', 'artist-albums'):
+            if 'albums' in spotify_data.keys():
+                album_api_data = spotify_data['albums']['items']
+            else:
+                album_api_data = spotify_data['items']
             with open('data/albums_all.json', 'w') as data_file:
-                json.dump(data, data_file)
+                json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_album_data = []
             
-            for album in data['albums']['items']:
+            for album in album_api_data:
                 album_data = {}
+                album_data['type'] = 'album'
+                album_data['spotify_id'] = album['id']
                 album_data['id'] = album['id']
                 album_data['name'] = album['name']
                 album_data['artists'] = album['artists']
                 album_data['release_date'] = album['release_date']
                 album_data['total_tracks'] = album['total_tracks']
-                album_data['image'] = album['images'][0]['url'] if album['images'] else ""
+                album_data['image'] = album['images'] #[0]['url'] if album['images'] else ""
                 if album_data['total_tracks'] > 0:
                     all_album_data.append(album_data)
             
@@ -88,12 +130,91 @@ class SPOTIFY:
                     json.dump(all_album_data, data_file)
                 result = all_album_data
         
-        elif 'tracks' == search_type:
-            track_data = data['tracks']['items']
-            if track_data:
+        elif search_type in ('tracks', 'album-tracks'):
+            if 'tracks' in spotify_data.keys():
+                album_data = []
+                track_api_data = spotify_data['tracks']['items']
+            else:
+                album_data = self.spotify_object.album(album_id=query)
+                track_api_data = album_data['tracks']['items']
+            
+            with open('data/tracks_all.json', 'w') as data_file:
+                json.dump(spotify_data, data_file)
+            print(f'Search Type = {search_type}')
+
+            all_track_data = []
+            
+            for track in track_api_data:
+                track_data = {}
+                track_data['type'] = 'track'
+                track_data['spotify_id'] = track['id']
+                track_data['id'] = track['id']
+                track_data['name'] = track['name']
+                # if search_type == 'album-tracks':
+                #     spotify_data = self.spotify_object.album(album_id=query)
+                #     track_data['album'] = spotify_data
+                #     track_data['popularity'] = spotify_data['popularity']
+                #     track_data['image'] = spotify_data['images'][0]['url'] if spotify_data['images'][0]['url'] else ""
+                # else:
+                #     track_data['album'] = track['album']
+                #     track_data['popularity'] = track['popularity']
+                #     track_data['image'] = track['album']['images'][0]['url'] if track['album']['images'][0]['url'] else ""
+
+                if album_data:
+                    track_data['album'] = album_data['name']
+                    track_data['album_id'] = album_data['id']
+                    track_data['popularity'] = album_data['popularity']
+                    track_data['image'] = album_data['images'][0]['url'] if album_data['images'][0]['url'] else ""
+                else:                    
+                    track_data['album'] = track['album']['name']
+                    track_data['album_id'] = track['album']['id']
+                    track_data['popularity'] = track['popularity']
+                    track_data['image'] = track['album']['images'][0]['url'] if track['album']['images'][0]['url'] else ""
+
+                track_data['artists'] = track['artists']
+                track_data['duration'] = round(float(track['duration_ms'])/60000, 2)
+                track_data['explicit'] = track['explicit']
+                track_data['spotify_url'] = track['external_urls']['spotify']
+                track_data['preview_url'] = track['preview_url']
+                
+
+                if track_data['duration'] > 0:
+                    all_track_data.append(track_data)
+            
+            if all_track_data:
                 with open('data/tracks.json', 'w') as data_file:
-                    json.dump(data, data_file)
-                result = track_data
+                    json.dump(all_track_data, data_file)
+                result = all_track_data
+
+        elif search_type in ('track-details'):
+            with open('data/tracks.json') as f:
+                track_json_data = json.load(f)
+            track = {}
+            for item in track_json_data:
+                if item['id'] == query:
+                    track = item
+            
+            track_data = {}
+            track_data['type'] = 'track'
+            track_data['spotify_id'] = track['id']
+            track_data['id'] = track['id']
+            track_data['name'] = track['name']
+            track_data['album'] = track['album']
+            track_data['album_id'] = track['album_id']
+            track_data['popularity'] = track['popularity']
+            track_data['image'] = track['image']
+
+            track_data['artists'] = track['artists']
+            track_data['duration'] = track['duration']
+            track_data['explicit'] = track['explicit']
+            track_data['spotify_url'] = track['spotify_url']
+            track_data['preview_url'] = track['preview_url']
+            track_name_genius = " ".join((track_data['name'].split('('))[:1])
+            track_artist_genius = track['artists'][0]['name']
+            track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
+
+            with open('data/lyrics.json', 'w') as data_file:
+                    json.dump(track_data, data_file)
+            result = track_data
 
         return result
-

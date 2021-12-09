@@ -31,10 +31,10 @@
                 var innerDiv = document.createElement('div');
                 innerDiv.id = 'inner-div' + index;
                 innerDiv.className = 'w-3/5 mr-0';
-                innerDiv.innerHTML = '<h2 class="text-gray-800 font-bold">' + item.name.raw + '</h2>';
+                innerDiv.innerHTML = '<h2 class="text-xl font-bold">' + item.name.raw + '</h2><br/>';
                 innerDiv.innerHTML += '<p>Followers: ' + item.followers.raw + '</p>';
 
-                newAtag.href = "../artist_albums/name/"+item.name.raw;
+                newAtag.href = "../artist_albums/id/"+item.spotify_id.raw;
                 
                 newDiv.appendChild(innerDiv);
                 newAtag.appendChild(newDiv);

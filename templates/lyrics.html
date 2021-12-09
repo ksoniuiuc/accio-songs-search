@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="justify-items-center">
-    <div id="parent-div" class="grid gap-8 grid-cols-3 mt-5 ">
+    <div id="parent-div" class="grid2 gap-8 grid-cols-1 mt-5 ml-8 ">
         <script type="text/javascript">
             var data_list = {{ data['results'] | tojson | safe }};
             console.log(data_list);
@@ -14,40 +14,33 @@
                     artist_name += artist.name + '; ';
                 };
                 artist_name = artist_name.slice( 0, artist_name.length - 2 );
-                console.log(artist_name);
-                
-                var newAtag = document.createElement('a');
-
                 var newDiv = document.createElement('div');
                 newDiv.id = 'result-div' + index;
                 newDiv.className = 'transition duration-500 ease-in-out flex py-3 px-2 hover:bg-blue-400 transform hover:-translate-y-1 hover:scale-110 hover:text-white hover:shadow-none hover:rounded border border-gray-300 shadow-lg';
-                
-                var images = item.image.raw;
-                console.log(typeof images)
-                console.log(images)
-                if (images.length == 0) {
-                    var image = "../static/images/no-image-icon.jpg";
-                }
-                else {
-                    console.log(typeof images[0]);
-                    console.log(images[0]);
-                    var image = JSON.parse(images[0]).url;
-                };
-                newDiv.innerHTML = '<img src=' + image + ' class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
-                
+                newDiv.innerHTML = '<img id="artist_image" src="' + item.image.raw + '" class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
                 var innerDiv = document.createElement('div');
                 innerDiv.id = 'inner-div' + index;
                 innerDiv.className = 'w-3/5 mr-0';
                 innerDiv.innerHTML = '<h2 class="text-xl font-bold">' + item.name.raw + '</h2><br/>';
-                innerDiv.innerHTML += '<p>Artist: ' + artist_name + '</p>';
-                innerDiv.innerHTML += '<p>No. of tracks: ' + item.total_tracks.raw + '</p>';
-                innerDiv.innerHTML += '<p>Released On: ' + item.release_date.raw + '</p>';
+                innerDiv.innerHTML += '<p><strong>Artist:</strong> ' + artist_name + '</p>';
+                innerDiv.innerHTML += '<p><strong>Duration:</strong> ' + item.duration.raw + ' minutes</p><br/>';
+
+                innerDiv.innerHTML += '<p><a class="a2" href="'+item.spotify_url.raw+'" target="_blank">Listen On Spotify</a><p/><br/>';
+
+                if (item.preview_url.raw) {
+                    innerDiv.innerHTML += '<audio controls> <source src=' + item.preview_url.raw + 'type="audio/mpeg">'+
+                                        'Your browser does not support the audio element. </audio>';
+                }
+                else {
+                    innerDiv.innerHTML += '<p>Oops!! No Preview</p>';
+                }
+
+                innerDiv.innerHTML += '<br/><pre><strong>Lyrics:</strong><br/>' + item.lyrics.raw + '</pre>';
                 
-                newAtag.href = "../../../album_tracks/id/"+item.spotify_id.raw;
                 
+
+                toAdd.appendChild(newDiv);
                 newDiv.appendChild(innerDiv);
-                newAtag.appendChild(newDiv);
-                toAdd.appendChild(newAtag);
             };
             document.getElementById('parent-div').appendChild(toAdd);
         </script>

@@ -1,7 +1,7 @@
 {
     "appsearch":{
-        "base_endpoint":"https://ksoni-deploy.ent.us-central1.gcp.cloud.es.io",
-        "api_key":"private-twj64ktc2yw1tun2bhba9ywv",
+        "base_endpoint":"http://localhost:3002",
+        "api_key":"private-t9mc7n15fbkqt2er6mpd16go",
         "engine_name":"accio-songs"
     },
     "spotify_api_auth":{

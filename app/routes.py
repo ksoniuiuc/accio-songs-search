@@ -1,29 +1,4 @@
-import json
-from elastic_enterprise_search import AppSearch
-from flask import Flask, render_template, request
-import requests
-import time
-
-# Spotify Class Import
-from spotify import SPOTIFY
-
-
-app = Flask(__name__)
-
-
-with open("config.json") as config_file:
-    config = json.load(config_file)
-
-client = AppSearch(
-    config['appsearch']['base_endpoint'],
-    http_auth=config['appsearch']['api_key'])
-
-engine_name = config['appsearch']['engine_name']
-
-
-# Spotify API Details
-spotify_obj = SPOTIFY(config)
-
+from app import *
 
 
 # Home page Route definition
@@ -265,30 +240,13 @@ def album_tracks(album_id):
 
 
 
-@app.route("/track_details/id/<track_id>", methods=['GET', 'POST'])
-def track_details(track_id):
-    search_type = 'track-details'
-    print(f'track_id {track_id}')
-
-    data = client.search(engine_name, body={
-        "query": "",
-        "search_fields": {
-            "name": {}
-        },
-        "sort": [
-            {"popularity": "desc"},
-            {"duration": "desc"},
-            {"name": "asc"}
-        ],
-        "filters": {
-            "type": "track"
-        }
-    })
-    api_response = ""
-    if 'lyrics' not in data["results"]:
-        api_response = get_api_data(track_id, search_type)
+@app.route("/lyrics/<query>", methods=['GET', 'POST'])
+def lyrics(query):
+    search_type = request.form['search_type']
+    print(f'query {query}')
+    if query != "":
         data = client.search(engine_name, body={
-            "query": "",
+            "query": query,
             "search_fields": {
                 "name": {}
             },
@@ -298,17 +256,33 @@ def track_details(track_id):
                 {"name": "asc"}
             ],
             "filters": {
-                "all": [
-                    {"type": "track"},
-                    {"spotify_id": track_id}
-                ],
+                "type": "track"
             }
         })
-        api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w') as outfile:
-            json.dump(data, outfile)
-    
-    search_type = 'tracks'
+        api_response = ""
+        if not data["results"] or len(data["results"]) < 20:
+            api_response = get_api_data(query, search_type)
+            data = client.search(engine_name, body={
+                "query": query,
+                "search_fields": {
+                    "name": {}
+                },
+                "sort": [
+                    {"popularity": "desc"},
+                    {"duration": "desc"},
+                    {"name": "asc"}
+                ],
+                "filters": {
+                    "type": "track"
+                }
+            })
+            api_response = "Data Found" if api_response else ""
+            with open('data/data.json', 'w') as outfile:
+                json.dump(data, outfile)
+        #print(data['results'])
+    else:
+        data = None
+        api_response = 'Please Enter text in the Search Bar...'
     return render_template("lyrics.html", data=data,
                            api_response=api_response if api_response else "No Data Found",
                            search_type=search_type, title='Lyrics')
@@ -327,6 +301,19 @@ def get_api_data(query, search_type):
     return []
 
 
+@app.route("/index")
+def index():
+    # Opening JSON file
+    f = open('data/data.json', )
+
+    # returns JSON object as
+    # a dictionary
+    documents = json.load(f)
+    data = client.list_documents(engine_name)
+    #data = client.index_documents(engine_name, documents)
+    data = [items['id'] for items in data['results']]
+    return render_template("about.html", data=data)
+
 
 @app.route("/delete")
 def delete():
@@ -339,6 +326,30 @@ def delete():
     return render_template("layout.html", data=data)
 
 
+def read(query, search_type):
+    matcher = "track.search"
+    if search_type == 'artist':
+        matcher_string = f'&q_artist={query}'
+        rating_criteria = f'&s_{search_type}_rating'
 
-if __name__ == "__main__":
-    app.run(debug=False)
+    elif search_type == 'track':
+        matcher_string = f'&q_track={query}'
+        rating_criteria = f'&s_{search_type}_rating'
+    else:
+        matcher_string = f'&q_lyrics={query}'
+        rating_criteria = f'&s_track_rating'
+
+    api_call = api_url + matcher + api_format + \
+        matcher_string + rating_criteria + api_key
+    request = requests.get(api_call)
+    data = request.json()
+    data = [item['track'] for item in data['message']["body"]['track_list']]
+    #print(data)
+    if data:
+        with open('data/data.json', 'w') as outfile:
+            json.dump(data, outfile)
+        response = client.index_documents(engine_name, data)
+        time.sleep(0.1)
+        return response
+    else:
+        return []
