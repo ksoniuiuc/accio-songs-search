@@ -8,7 +8,7 @@
         "url":"https://accounts.spotify.com/authorize?",
         "client_id":"565d0751a4944284b5403077e09ef1dd",
         "response_type":"code",
-        "redirect_uri":"http://localhost:5005/",
+        "redirect_uri":"https://kushagrasoni.pythonanywhere.com",
         "scope":"user-library-read",
         "client_secret":"028ab6a473de47ebbec56abc94947678",
         "Authorization": "Authorization: Basic NTY1ZDA3NTFhNDk0NDI4NGI1NDAzMDc3ZTA5ZWYxZGQ6YjlkMjM0MmI2MjllNDEwN2FhYzYxNjUzNWE2NzAyYzk=",
