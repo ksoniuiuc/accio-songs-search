@@ -13,6 +13,9 @@ from spotipy.oauth2 import SpotifyOAuth
 # Genius Class Import
 from genius import GENIUS
 
+# Genius Class Import
+from youtube import YOUTUBE
+
 # def _make_authorization_headers(client_id, client_secret):
 #     auth_header = base64.b64encode(six.text_type(client_id + ':' + client_secret).encode('ascii'))
 #     return {'Authorization': 'Basic %s' % auth_header.decode('ascii')}
@@ -29,21 +32,6 @@ class SPOTIFY:
         print(cache_handler)
         self.token_info = self.authObject.get_access_token()
 
-        # if not self.token_info:
-        #     auth_url = self.authObject.get_authorize_url()
-        #     print(auth_url)
-        #     #response = auth_url#input('Paste the above link into your browser, then paste the redirect url here: ')
-
-        #     code = self.authObject.parse_response_code(auth_url)
-        #     token_info = self.authObject.get_access_token(code)
-
-        #     self.access_token = token_info['access_token']
-        #     # print(self.authObject)
-        #     # self.token_dict = self.authObject.get_access_token()
-        #     # #token_dict = authObject.get_cached_token()
-
-        #     # print(self.token_dict)
-
         self.access_token = self.token_info["access_token"]
 
         self.spotify_object = spotipy.Spotify(auth=self.access_token)
@@ -51,10 +39,15 @@ class SPOTIFY:
     
         print(self.spotify_object)
 
-        # Spotify API Details
+        # Genius API Details
         self.genius_obj = GENIUS(config)
 
         print(self.genius_obj)
+
+        # YouTube API Details
+        self.youtube_obj = YOUTUBE(config)
+
+        print(self.youtube_obj)
 
     def refresh(self):
         if self.authObject.is_token_expired(self.token_info):
@@ -228,6 +221,10 @@ class SPOTIFY:
             track_artist_genius = track['artists'][0]['name']
             track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
 
+            ## Get YouTube URL
+            youtube_query = f"{track_data['name']} {track_data['album']}"
+            track_data['youtube_url'] = self.youtube_obj.youtube_search(youtube_query)
+            
             # with open('data/lyrics.json', 'w+') as data_file:
             #         json.dump(track_data, data_file)
             result = track_data

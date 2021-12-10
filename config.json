@@ -20,5 +20,10 @@
         "client_id":"v00yIU5wjmIzgH1wkCet_klOjQ7K8Kg5Xf8vtF0e0BNgIxxQclth2FT9-FuaC8H9",
         "client_secret":"WNB3lqEREcWJ4Doz_SQd9gSpOBDNA3Nh3nFhVpU6CQEN5Xsf1DLiR4GmR6Ei_2QaXww9d0-BewH8cUF13_5nuQ",
         "access_token": "4fai3aBQ9kO_AYDFgyzhhLaVrmj41JgnkR2HW3a6Zy9eHUHXhVpllGgsuVCqdDh9"
+    },
+    "youtube_api":{
+        "developer_key":"AIzaSyBfUA5S7EpftJPTJucz-UEfuf1MFT8rHSQ",
+        "service_name": "youtube",
+        "version": "v3"
     }
 }

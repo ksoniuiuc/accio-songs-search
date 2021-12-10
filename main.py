@@ -307,7 +307,7 @@ def track_details(track_id):
         }
     })
     api_response = ""
-    if 'lyrics' not in data["results"]:
+    if 'lyrics' not in data["results"] or 'youtube_url' not in data["results"]:
         api_response = get_api_data(track_id, search_type)
         data = client.search(engine_name, body={
             "query": "",
@@ -331,9 +331,9 @@ def track_details(track_id):
         #     json.dump(data, outfile)
     
     search_type = 'tracks'
-    return render_template("lyrics.html", data=data,
+    return render_template("track_details.html", data=data,
                            api_response=api_response if api_response else "No Data Found",
-                           search_type=search_type, title='Lyrics')
+                           search_type=search_type, title='Track Details')
 
 
 
@@ -364,4 +364,4 @@ def delete():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(host='0.0.0.0', port=5005, debug=False)

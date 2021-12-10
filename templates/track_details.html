@@ -25,17 +25,25 @@
                 innerDiv.innerHTML += '<p><strong>Artist:</strong> ' + artist_name + '</p>';
                 innerDiv.innerHTML += '<p><strong>Duration:</strong> ' + item.duration.raw + ' minutes</p><br/>';
 
-                innerDiv.innerHTML += '<p><a class="a2" href="'+item.spotify_url.raw+'" target="_blank">Listen On Spotify</a><p/><br/>';
-
                 if (item.preview_url.raw) {
                     innerDiv.innerHTML += '<audio controls> <source src=' + item.preview_url.raw + 'type="audio/mpeg">'+
-                                        'Your browser does not support the audio element. </audio>';
+                                        'Your browser does not support the audio element. </audio><br/>';
                 }
                 else {
-                    innerDiv.innerHTML += '<p>Oops!! No Preview</p>';
+                    innerDiv.innerHTML += '<p>Oops!! No Preview</p><br/>';
                 }
 
-                innerDiv.innerHTML += '<br/><pre><strong>Lyrics:</strong><br/>' + item.lyrics.raw + '</pre>';
+                innerDiv.innerHTML += '<p><a class="a2 text-xl font-bold" href="'+item.spotify_url.raw+'" target="_blank">Listen On Spotify</a><p/><br/>';
+
+                if (item.youtube_url.raw) {
+                    innerDiv.innerHTML += '<iframe id="ytplayer" type="text/html" width="640" height="360" src="' + item.youtube_url.raw + '" frameborder="0"></iframe><br/>';
+
+                }
+                else {
+                    innerDiv.innerHTML += '<iframe>Sorry!! Cannot Find YouTube Video</iframe><br/>';
+                }
+
+                innerDiv.innerHTML += '<pre class="pre"><strong>Lyrics:</strong><br/>' + item.lyrics.raw + '</pre>';
                 
                 
 
