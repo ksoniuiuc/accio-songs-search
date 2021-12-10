@@ -14,3 +14,11 @@
 
         ./scripts/setup.sh
 <br/>
+<br/>
+
+## Running the Accio-Songs App    
+<br/>
+
+- Run Below command to execute the App:
+
+        python main.py
