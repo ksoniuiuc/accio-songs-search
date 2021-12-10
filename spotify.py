@@ -23,7 +23,8 @@ class SPOTIFY:
         self.authObject = SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
                                         client_secret=config["spotify_api_auth"]["client_secret"],
                                         redirect_uri=config["spotify_api_auth"]["redirect_uri"],
-                                        scope=config["spotify_api_auth"]["scope"])
+                                        scope=config["spotify_api_auth"]["scope"],
+                                        cache_handler=cache_handler)
         
         self.token_info = self.authObject.get_access_token()
 
