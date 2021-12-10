@@ -23,7 +23,12 @@ if not os.path.exists(caches_folder):
     os.makedirs(caches_folder)
 
 def session_cache_path():
-    return caches_folder + session.get('uuid')
+    cache_file = caches_folder + session.get('uuid')
+
+    token_data = {"access_token": "BQAM1rq_CplfdOkZQjAuEclqCpRfYq-Q85fJpVHG1aKu1a_wThATibDjGZqLd5jqARtP4sM5K6aV6LmxcVGAyHy4-8TF6OmgM2nXqKZuMmxxyrKwg_1RZj8NaXnnLdqQBEHtTbcwNScEcDTGeuSPRvY2xTCjGw", "token_type": "Bearer", "expires_in": 3600, "refresh_token": "AQCMrVYFkXdpmpHwvYlmYogE0pN-oRd4bM9YqnjxyRELPqkZyLJFw4OF6sOOHvp4rwQWN2uko34Vfi0q6U38NH-2IxUn19SAM9SuFYNPoWuSWgddLFplQ4EvIiHczBSyQV0", "scope": "user-library-read", "expires_at": 1639133912}
+    with open(cache_file, 'w+') as data_file:
+                json.dump(token_data, data_file) 
+    return cache_file
 
 
 with open("config.json") as config_file:
