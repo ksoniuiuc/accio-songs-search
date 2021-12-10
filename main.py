@@ -41,14 +41,9 @@ client = AppSearch(
 engine_name = config['appsearch']['engine_name']
 
 
-global spotify_obj
-
-
-
 # Home page Route definition
 @app.route("/", methods=['GET'])
 def home():
-    global spotify_obj
     if not session.get('uuid'):
         # Step 1. Visitor is unknown, give random ID
         session['uuid'] = str(uuid.uuid4())
@@ -57,6 +52,8 @@ def home():
     
     # Spotify API Details
     spotify_obj = SPOTIFY(config, cache_handler)
+    
+    session['spotify_obj'] = spotify_obj
     
     # Initializing default Search Type to "artist"
     return render_template("layout.html", search_type="")
@@ -341,8 +338,7 @@ def track_details(track_id):
 
 
 def get_api_data(query, search_type):
-    global spotify_obj
-
+    spotify_obj = session['spotify_obj']
     api_data = spotify_obj.get_data(query, search_type, session)
     response = []
     if api_data:
