@@ -19,31 +19,31 @@ from genius import GENIUS
 
 class SPOTIFY:
 
-    def __init__(self, config) -> None:
+    def __init__(self, config, cache_handler):
         self.authObject = SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
                                         client_secret=config["spotify_api_auth"]["client_secret"],
                                         redirect_uri=config["spotify_api_auth"]["redirect_uri"],
-                                        scope=config["spotify_api_auth"]["scope"])
+                                        scope=config["spotify_api_auth"]["scope"],
+                                        cache_handler=cache_handler)
         
-        self.token_info = self.authObject.get_cached_token()
+        self.token_info = self.authObject.get_access_token()
 
-        if not self.token_info:
-            auth_url = self.authObject.get_authorize_url()
-            print(auth_url)
-            response = input('Paste the above link into your browser, then paste the redirect url here: ')
+        # if not self.token_info:
+        #     auth_url = self.authObject.get_authorize_url()
+        #     print(auth_url)
+        #     #response = auth_url#input('Paste the above link into your browser, then paste the redirect url here: ')
 
-            code = self.authObject.parse_response_code(response)
-            token_info = self.authObject.get_access_token(code)
+        #     code = self.authObject.parse_response_code(auth_url)
+        #     token_info = self.authObject.get_access_token(code)
 
-            self.access_token = token_info['access_token']
-        # print(self.authObject)
+        #     self.access_token = token_info['access_token']
+        #     # print(self.authObject)
+        #     # self.token_dict = self.authObject.get_access_token()
+        #     # #token_dict = authObject.get_cached_token()
 
-        # self.token_dict = self.authObject.get_access_token()
-        # #token_dict = authObject.get_cached_token()
+        #     # print(self.token_dict)
 
-        # print(self.token_dict)
-
-        # self.access_token = self.token_dict["access_token"]
+        self.access_token = self.token_info["access_token"]
 
         self.spotify_object = spotipy.Spotify(auth=self.access_token)
 
@@ -56,25 +56,18 @@ class SPOTIFY:
         print(self.genius_obj)
 
     def refresh(self):
-        global token_info, sp
-
         if self.authObject.is_token_expired(self.token_info):
             self.token_info = self.authObject.refresh_access_token(self.token_info['refresh_token'])
             token = self.token_info['access_token']
-            sp = spotipy.Spotify(auth=token)
+            self.spotify_object = spotipy.Spotify(auth=token)
 
 
 
-    def get_data(self, query, search_type):
-        print(f'Is token Expired ? {self.authObject.is_token_expired(self.token_dict)}')
-        if self.authObject.is_token_expired(self.token_dict):
+    def get_data(self, query, search_type, session):
+        print(f'Is token Expired ? {self.authObject.is_token_expired(self.token_info)}')
+        if self.authObject.is_token_expired(self.token_info):
             print("TOKEN EXPIRED !!!!")
-            token_data = self.authObject.get_cached_token()
-            print(token_data)
-            self.access_token = self.authObject.refresh_access_token(token_data['refresh_token'])
-            print(self.access_token)
-            self.spotify_object = spotipy.Spotify(auth=self.access_token)
-            print(self.spotify_object)
+            self.refresh()
             
         result = {}
         spotify_data = {}
@@ -83,8 +76,8 @@ class SPOTIFY:
 
         elif search_type == 'album-tracks':
             spotify_data = self.spotify_object.album_tracks(album_id=query, limit=10)
-            with open('data/tracks_all.json', 'w+') as data_file:
-                json.dump(spotify_data, data_file)
+            # with open('data/tracks_all.json', 'w+') as data_file:
+            #     json.dump(spotify_data, data_file)
 
         elif search_type == 'track-details':
             track_id = query
@@ -95,9 +88,9 @@ class SPOTIFY:
         
         if 'artists' == search_type:            
             artists_api_data = spotify_data['artists']['items']
-            with open('data/artists_all.json', 'w+') as data_file:
-                json.dump(spotify_data, data_file)
-            print(f'Search Type = {search_type}')
+            # with open('data/artists_all.json', 'w+') as data_file:
+            #     json.dump(spotify_data, data_file)
+            # print(f'Search Type = {search_type}')
         
             all_artist_data = []
             
@@ -115,8 +108,8 @@ class SPOTIFY:
                     all_artist_data.append(artist_data)
             
             if all_artist_data:
-                with open('data/artists.json', 'w+') as data_file:
-                    json.dump(all_artist_data, data_file)
+                # with open('data/artists.json', 'w+') as data_file:
+                #     json.dump(all_artist_data, data_file)
                 result = all_artist_data
 
 
@@ -125,8 +118,8 @@ class SPOTIFY:
                 album_api_data = spotify_data['albums']['items']
             else:
                 album_api_data = spotify_data['items']
-            with open('data/albums_all.json', 'w+') as data_file:
-                json.dump(spotify_data, data_file)
+            # with open('data/albums_all.json', 'w+') as data_file:
+            #     json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_album_data = []
@@ -145,8 +138,8 @@ class SPOTIFY:
                     all_album_data.append(album_data)
             
             if all_album_data:
-                with open('data/albums.json', 'w+') as data_file:
-                    json.dump(all_album_data, data_file)
+                # with open('data/albums.json', 'w+') as data_file:
+                #     json.dump(all_album_data, data_file)
                 result = all_album_data
         
         elif search_type in ('tracks', 'album-tracks'):
@@ -157,8 +150,8 @@ class SPOTIFY:
                 album_data = self.spotify_object.album(album_id=query)
                 track_api_data = album_data['tracks']['items']
             
-            with open('data/tracks_all.json', 'w+') as data_file:
-                json.dump(spotify_data, data_file)
+            # with open('data/tracks_all.json', 'w+') as data_file:
+            #     json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_track_data = []
@@ -201,13 +194,15 @@ class SPOTIFY:
                     all_track_data.append(track_data)
             
             if all_track_data:
-                with open('data/tracks.json', 'w+') as data_file:
-                    json.dump(all_track_data, data_file)
+                session['track_data'] = all_track_data
+                # with open('data/tracks.json', 'w+') as data_file:
+                #     json.dump(all_track_data, data_file)
                 result = all_track_data
 
         elif search_type in ('track-details'):
-            with open('data/tracks.json') as f:
-                track_json_data = json.load(f)
+            # with open('data/tracks.json') as f:
+            #     track_json_data = json.load(f)
+            track_json_data = session['track_data']
             track = {}
             for item in track_json_data:
                 if item['id'] == query:
@@ -232,8 +227,8 @@ class SPOTIFY:
             track_artist_genius = track['artists'][0]['name']
             track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
 
-            with open('data/lyrics.json', 'w+') as data_file:
-                    json.dump(track_data, data_file)
+            # with open('data/lyrics.json', 'w+') as data_file:
+            #         json.dump(track_data, data_file)
             result = track_data
 
         return result

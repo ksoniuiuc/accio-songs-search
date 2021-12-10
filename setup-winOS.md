@@ -12,7 +12,7 @@
 ### Creating VEnv and Installing the Dependencies
 - Run Below command to Initiate and activate the Virtual environment and install all dependencies:
 
-        ./scripts/setup.sh
+        bash ./scripts/setup.sh
 <br/>
 
 ## Activating the Virtual Environment

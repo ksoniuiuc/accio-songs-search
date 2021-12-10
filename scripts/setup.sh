@@ -1,5 +1,3 @@
-#!usr/bin/sh
-
 ## Creating a Virtual Environment
 python3 -m venv env
 

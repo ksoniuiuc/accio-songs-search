@@ -1,14 +1,29 @@
+import os
 import json
 from elastic_enterprise_search import AppSearch
-from flask import Flask, render_template, request
+from flask import Flask, session, render_template, request
+from flask_session import Session
 import requests
 import time
+import uuid
+import spotipy
 
 # Spotify Class Import
 from spotify import SPOTIFY
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(64)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = './.flask_session/'
+Session(app)
+
+caches_folder = './.spotify_caches/'
+if not os.path.exists(caches_folder):
+    os.makedirs(caches_folder)
+
+def session_cache_path():
+    return caches_folder + session.get('uuid')
 
 
 with open("config.json") as config_file:
@@ -21,14 +36,22 @@ client = AppSearch(
 engine_name = config['appsearch']['engine_name']
 
 
-# Spotify API Details
-spotify_obj = SPOTIFY(config)
+global spotify_obj
 
 
 
 # Home page Route definition
 @app.route("/", methods=['GET'])
 def home():
+    global spotify_obj
+    if not session.get('uuid'):
+        # Step 1. Visitor is unknown, give random ID
+        session['uuid'] = str(uuid.uuid4())
+
+    cache_handler = spotipy.cache_handler.CacheFileHandler(cache_path=session_cache_path())
+    
+    # Spotify API Details
+    spotify_obj = SPOTIFY(config, cache_handler)
     
     # Initializing default Search Type to "artist"
     return render_template("layout.html", search_type="")
@@ -68,8 +91,8 @@ def artists(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w+') as outfile:
-                json.dump(data, outfile)
+            # with open('data/data.json', 'w+') as outfile:
+            #     json.dump(data, outfile)
         #print(data['results'])
     else:
         data = None
@@ -110,8 +133,8 @@ def albums(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w+') as outfile:
-                json.dump(data, outfile)
+            # with open('data/data.json', 'w+') as outfile:
+            #     json.dump(data, outfile)
         #print(data['results'])
     else:
         data = None
@@ -157,8 +180,8 @@ def artist_albums(artist_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w+') as outfile:
-            json.dump(data, outfile)
+        # with open('data/data.json', 'w+') as outfile:
+        #     json.dump(data, outfile)
     #print(data['results'])
     search_type = 'albums'
     return render_template("albums.html", data=data,
@@ -203,8 +226,8 @@ def tracks(query):
                 }
             })
             api_response = "Data Found" if api_response else ""
-            with open('data/data.json', 'w+') as outfile:
-                json.dump(data, outfile)
+            # with open('data/data.json', 'w+') as outfile:
+            #     json.dump(data, outfile)
         #print(data['results'])
     else:
         data = None
@@ -252,8 +275,8 @@ def album_tracks(album_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w+') as outfile:
-            json.dump(data, outfile)
+        # with open('data/data.json', 'w+') as outfile:
+        #     json.dump(data, outfile)
 
     search_type = 'tracks'
     return render_template("tracks.html", data=data,
@@ -302,8 +325,8 @@ def track_details(track_id):
             }
         })
         api_response = "Data Found" if api_response else ""
-        with open('data/data.json', 'w+') as outfile:
-            json.dump(data, outfile)
+        # with open('data/data.json', 'w+') as outfile:
+        #     json.dump(data, outfile)
     
     search_type = 'tracks'
     return render_template("lyrics.html", data=data,
@@ -313,7 +336,9 @@ def track_details(track_id):
 
 
 def get_api_data(query, search_type):
-    api_data = spotify_obj.get_data(query, search_type)
+    global spotify_obj
+
+    api_data = spotify_obj.get_data(query, search_type, session)
     response = []
     if api_data:
         response = client.index_documents(engine_name, api_data)

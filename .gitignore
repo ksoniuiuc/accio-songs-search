@@ -5,3 +5,5 @@ lib/
 pyvenv.cfg
 log/*
 data/*.json
+.flask_session
+.spotify_caches
