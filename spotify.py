@@ -20,19 +20,30 @@ from genius import GENIUS
 class SPOTIFY:
 
     def __init__(self, config) -> None:
-        self.authObject = spotipy.SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
+        self.authObject = SpotifyOAuth(client_id=config["spotify_api_auth"]["client_id"],
                                         client_secret=config["spotify_api_auth"]["client_secret"],
                                         redirect_uri=config["spotify_api_auth"]["redirect_uri"],
                                         scope=config["spotify_api_auth"]["scope"])
+        
+        self.token_info = self.authObject.get_cached_token()
 
-        print(self.authObject)
+        if not self.token_info:
+            auth_url = self.authObject.get_authorize_url()
+            print(auth_url)
+            response = input('Paste the above link into your browser, then paste the redirect url here: ')
 
-        self.token_dict = self.authObject.get_access_token()
-        #token_dict = authObject.get_cached_token()
+            code = self.authObject.parse_response_code(response)
+            token_info = self.authObject.get_access_token(code)
 
-        print(self.token_dict)
+            self.access_token = token_info['access_token']
+        # print(self.authObject)
 
-        self.access_token = self.token_dict["access_token"]
+        # self.token_dict = self.authObject.get_access_token()
+        # #token_dict = authObject.get_cached_token()
+
+        # print(self.token_dict)
+
+        # self.access_token = self.token_dict["access_token"]
 
         self.spotify_object = spotipy.Spotify(auth=self.access_token)
 
@@ -44,10 +55,18 @@ class SPOTIFY:
 
         print(self.genius_obj)
 
+    def refresh(self):
+        global token_info, sp
+
+        if self.authObject.is_token_expired(self.token_info):
+            self.token_info = self.authObject.refresh_access_token(self.token_info['refresh_token'])
+            token = self.token_info['access_token']
+            sp = spotipy.Spotify(auth=token)
 
 
 
     def get_data(self, query, search_type):
+        print(f'Is token Expired ? {self.authObject.is_token_expired(self.token_dict)}')
         if self.authObject.is_token_expired(self.token_dict):
             print("TOKEN EXPIRED !!!!")
             token_data = self.authObject.get_cached_token()

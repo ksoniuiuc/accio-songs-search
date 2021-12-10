@@ -9,11 +9,19 @@
 ## Setting up the Virtual Environment    
 <br/>
 
-### Activating VEnv and Installing the Dependencies
+### Creating VEnv and Installing the Dependencies
 - Run Below command to Initiate and activate the Virtual environment and install all dependencies:
 
         ./scripts/setup.sh
 <br/>
+
+## Activating the Virtual Environment
+<br/>
+
+- Run Below command to execute the App:
+
+        source ./env/Scripts/activate
+
 <br/>
 
 ## Running the Accio-Songs App    
