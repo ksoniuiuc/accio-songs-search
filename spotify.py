@@ -26,6 +26,7 @@ class SPOTIFY:
                                         scope=config["spotify_api_auth"]["scope"],
                                         cache_handler=cache_handler)
         
+        print(cache_handler)
         self.token_info = self.authObject.get_access_token()
 
         # if not self.token_info:
