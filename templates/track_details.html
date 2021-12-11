@@ -21,12 +21,12 @@
                 var innerDiv = document.createElement('div');
                 innerDiv.id = 'inner-div' + index;
                 innerDiv.className = 'w-3/5 mr-0';
-                innerDiv.innerHTML = '<h2 class="text-xl font-bold">' + item.name.raw + '</h2><br/>';
-                innerDiv.innerHTML += '<p><strong>Artist:</strong> ' + artist_name + '</p>';
-                innerDiv.innerHTML += '<p><strong>Duration:</strong> ' + item.duration.raw + ' minutes</p><br/>';
+                innerDiv.innerHTML = '<h2 class="text-3xl font-bold">' + item.name.raw + '</h2><br/>';
+                innerDiv.innerHTML += '<p class="text-xl"><strong><u>Artist</strong></u>:  ' + artist_name + '</p>';
+                innerDiv.innerHTML += '<p class="text-xl"><strong><u>Duration</strong></u>:  ' + item.duration.raw + ' minutes</p><br/>';
 
                 if (item.preview_url.raw) {
-                    innerDiv.innerHTML += '<p><strong>Preview:</p><br/>'
+                    innerDiv.innerHTML += '<p><strong><u>Preview</strong></u>:  </p><br/>'
                     innerDiv.innerHTML += '<audio controls> <source src=' + item.preview_url.raw + 'type="audio/mpeg">'+
                                         'Your browser does not support the audio element. </audio>';
                 }
@@ -58,7 +58,7 @@
 
                 var lyricsDiv = document.createElement('p');
                 lyricsDiv.id = 'lyrics' + index;
-                lyricsDiv.innerHTML = '<br/><br/><p><strong>Lyrics:</strong></p>';
+                lyricsDiv.innerHTML = '<br/><br/><p><strong><u>Lyrics:</strong></u></p>';
                 lyricsDiv.innerHTML += '<br/><pre class="pre"><code>' + item.lyrics.raw + '<code></pre>';
                 
                 innerDiv.appendChild(lyricsDiv);              

@@ -1,0 +1,75 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- <link href="just_title.css" rel="stylesheet" /> -->
+</head>
+
+<body>
+  <div class="field">
+    <div class="title">
+      <span class="letters">Accio Songs</span>
+    </div>
+  </div>
+</body>
+</html>
+
+<style>
+@font-face {
+  font-family: 'Harry Potter';
+  src: url('./styling/harry-potter.TTF');
+}
+
+body {
+  background: url("./styling/background.png");
+  background-size: cover;
+  background-position: center center;
+}
+
+.title {
+  font-size: 40px;
+  font-family: 'Harry Potter';
+  text-align: center;
+}
+
+.title span.letters {
+  font-size: 6rem;
+}
+
+.letters {
+  color: #FFC500;
+  text-shadow: 2px 2px 6px #333;
+  animation: color-changer 8s infinite;
+  transition: color-changer ease-in-out;
+  @for $i from 1 through 10 {
+    &:nth-of-type(#{$i}) {
+      animation-delay: #{$i * 100}ms;
+    }
+  }
+}
+
+@keyframes color-changer {
+  33% {
+    color: #FFC500;
+  }
+  66% {
+    color: #740001;
+  }
+  100% {
+    color: #FFC500;
+  }
+}
+
+@-webkit-keyframes color-changer {
+  33% {
+    color: #FFC500;
+  }
+  66% {
+    color: #740001;
+  }
+  100% {
+    color: #FFC500;
+  }
+}
+</style>

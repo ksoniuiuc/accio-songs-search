@@ -62,14 +62,15 @@ class SPOTIFY:
         if self.authObject.is_token_expired(self.token_info):
             print("TOKEN EXPIRED !!!!")
             self.refresh()
-            
+        
+        print(query, search_type, session)
         result = {}
         spotify_data = {}
         if search_type == 'artist-albums':
-            spotify_data = self.spotify_object.artist_albums(artist_id=query, limit=10)
+            spotify_data = self.spotify_object.artist_albums(artist_id=query, limit=9)
 
         elif search_type == 'album-tracks':
-            spotify_data = self.spotify_object.album_tracks(album_id=query, limit=10)
+            spotify_data = self.spotify_object.album_tracks(album_id=query, limit=9)
             # with open('data/tracks_all.json', 'w+') as data_file:
             #     json.dump(spotify_data, data_file)
 
@@ -78,7 +79,7 @@ class SPOTIFY:
             #spotify_data = self.spotify_object.track(q=track_id, type='track', limit=1)
 
         else:            
-            spotify_data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=10)
+            spotify_data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=9)
         
         if 'artists' == search_type:            
             artists_api_data = spotify_data['artists']['items']
@@ -186,6 +187,7 @@ class SPOTIFY:
                 
 
                 if track_data['duration'] > 0:
+                    print("HERE")
                     all_track_data.append(track_data)
             
             if all_track_data:

@@ -4,74 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="stylesheet" href="{{url_for('static', filename='css/main_min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/accio.css')}}">
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     {% if title %}
-        <title>Accio Songs - {{title}} </title>
+    <title>Accio Songs - {{title}} </title>
     {% else %}
-        <title>Accio Songs - Music Search</title>
+    <title>Accio Songs - Music Search</title>
     {% endif %}
-    
+
 </head>
 
 <body>
-    <div class="bg-gray-700 px-3 py-1">
-        {% if title %}
-            <h2 class="text-3xl font-light text-white m-0">Accio Songs - {{title}}</h2>
-        {% else %}
-            <h2 class="text-3xl font-light text-white m-0">Accio Songs - Home</h2>
-        {% endif %}
-        
-    </div>
-    <div class="justify-center pl-60 ml-96">
-        <form id="form" onSubmit="getAction()" method="POST">
-            <input id="form_input" type="text" placeholder="Search here..."
-                class="border-2 border-gray-700 mt-10 w-2/5 py-3 px-4"></input>
-            <button class="bg-blue-700 text-xl hover:bg-blue-500 text-white py-2 px-3">
-                Search
-            </button>
-            <p>Select Search Type:</p>
+    <div class="bg">
+        <div class="title">
+            {% if title %}
+            <span class="letters">Accio Songs - {{title}}</span>
+            {% else %}
+            <span class="letters">Accio Songs - Music Search</span>
+            {% endif %}
+        </div>
+        <div class="container">
+            <div class="form">
+                <form name="search_form" id="form" onSubmit="getAction()" method="POST">
+                    <div class="inner-form">
+                        <div class="input-field">
+                            <div class="second-wrap">
+                                <input name="search_input" id="form_input" type="text"
+                                    placeholder="Search here..."></input>
+                            </div>
+                            <div class="third-wrap">
+                                <button class="btn-search" type="submit" onClick="return validate()" >Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Select Search Type:</p>
+                    <div>
+                        <input type="radio" id="artists" name="search_type" value="artists">
+                        <label for="artist">Artists</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="albums" name="search_type" value="albums">
+                        <label for="track">Albums</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="tracks" name="search_type" value="tracks">
+                        <label for="track">Tracks</label>
+                    </div>
+                    <script>
+                        window.onload = setValue();
 
-            <div>
-                <input type="radio" id="artists" name="search_type" value="artists">
-                <label for="artist">Artists</label>
+                        function getAction() {
+                            
+                                search_type_value = document.querySelector('input[name="search_type"]:checked').value;
+                                document.getElementById("form_input").name = search_type_value + "_form";
+                                var query = document.getElementById("form_input").value;
+                                console.log(search_type_value);
+
+                                document.getElementById("form").action = "/" + search_type_value + "/" + query;
+                            
+                        };
+
+                        function validate() {
+                            var search_query = document.forms["search_form"]["search_input"].value;
+                            if (search_query == "") {
+                                alert("Please enter a Keyword...");
+                                return false;
+                            }
+                        };
+
+                        function setValue() {
+                            var search_type_value = "{{ search_type }}";
+                            if (search_type_value == "") {
+                                document.getElementById('artists').checked = true;
+                            }
+                            else {
+                                document.getElementById(search_type_value).checked = true;
+                            }
+                        }
+                    </script>
+                </form>
             </div>
-            <div>
-                <input type="radio" id="albums" name="search_type" value="albums">
-                <label for="track">Albums</label>
+            <div class="results">
+                <p class="justify-center">{{ api_response }}</p>
+                {% block content %}{% endblock %}
             </div>
-            <div>
-                <input type="radio" id="tracks" name="search_type" value="tracks">
-                <label for="track">Tracks</label>
-            </div>           
-            <script>
-                window.onload = setValue();
-                
-                function getAction() {
-                    search_type_value = document.querySelector('input[name="search_type"]:checked').value;
-                    document.getElementById("form_input").name=search_type_value+"_form";
-                    var query = document.getElementById("form_input").value;
-                    console.log(search_type_value);
-                    
-                    document.getElementById("form").action = "/" + search_type_value + "/" + query;
-                };            
-                function setValue() {
-                    var search_type_value = "{{ search_type }}";
-                    if (search_type_value == "") {
-                        document.getElementById('artists').checked = true;
-                    }
-                    else {
-                        document.getElementById(search_type_value).checked = true;
-                    }
-                } 
-            </script>
-        </form>
-        <p class='text-xl mt-10 block font-bold justify-center'>{{ api_response }}</p>
+        </div>
+
     </div>
-    {% block content %}{% endblock %}
+
 </body>
 
 </html>

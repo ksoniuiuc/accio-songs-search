@@ -16,12 +16,12 @@
           <div class="inner-form">
             <div class="input-field first-wrap">
               <div class="input-select">
-                <select data-trigger="" name="choices-single-defaul">
-                  <option placeholder="">Search by..</option>
-                  <option>Artist</option>
-                  <option>Track</option>
-                  <option>Album</option>
-                  <option>Lyrics</option>
+                <select data-trigger="" name="choices-single-defaul" required>
+                  <option disabled selected hidden>Search by..</option>
+                  <option value="artist">Artist</option>
+                  <option value="track">Track</option>
+                  <option value="album">Album</option>
+                  <option value="lyrics">Lyrics</option>
                 </select>
               </div>
             </div>
@@ -32,13 +32,31 @@
               <button class="btn-search" type="button">Search</button>
             </div>
           </div>
+
+          <script>
+              var search_type = document.getElementById("search_type").textContent
+              if (search_type == "artist" || search_type == null) {
+                  document.getElementById("artist").checked = true;
+              }
+              else if (search_type == "track") {
+                  document.getElementById("track").checked = true;
+              }
+              else if (search_type == "album"){
+                  document.getElementById("album").checked = true;
+              }
+              else {
+                  document.getElementById("lyrics").checked = true;
+              }
+          </script>
+
         </form>
+        <p class='content'>{{api_response}}</p>
       </div>
 
-      <div class="content">
-        <h2>CSS Template</h2>
-        <p>A topnav, content and a footer.</p>
-      </div>
+      <!-- <div class="content">
+        <h2>Results</h2>
+        <p>{{api_response}}</p>
+      </div> -->
 
       <div class="footer">
         <p>Footer</p>
@@ -48,7 +66,7 @@
 
     <footer class="m-managed"></footer>
   </div>
-    <script src="js/extention/choices.js"></script>
+    <!-- <script src="js/extention/choices.js"></script>
     <script>
       const choices = new Choices('[data-trigger]',
       {
@@ -56,6 +74,9 @@
         itemSelectText: '',
       });
 
-    </script>
+    </script> -->
+
+    {% block content %}{% endblock %}
+
   </body>
 </html>
