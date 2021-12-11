@@ -190,14 +190,15 @@ class SPOTIFY:
             
             if all_track_data:
                 session['track_data'] = all_track_data
-                # with open('data/tracks.json', 'w+') as data_file:
-                #     json.dump(all_track_data, data_file)
+                with open('tracks.json', 'w+') as data_file:
+                    json.dump(all_track_data, data_file)
                 result = all_track_data
 
         elif search_type in ('track-details'):
             # with open('data/tracks.json') as f:
             #     track_json_data = json.load(f)
             track_json_data = session['track_data']
+            session.pop('track_data', None)
             track = {}
             for item in track_json_data:
                 if item['id'] == query:
