@@ -16,9 +16,12 @@ class YOUTUBE:
         # Call the search.list method to retrieve results matching the specified
         # query term.
         try:
+            #print(query)
             search_response = youtube.search().list(
             q=query,
-            part='id,snippet',
+            part='snippet',
+            type='video',
+            order='relevance',
             maxResults=1
             ).execute()
 
@@ -28,34 +31,28 @@ class YOUTUBE:
 
             # Add each result to the appropriate list, and then display the lists of
             # matching videos, channels, and playlists.
-            search_result = search_response.get('items', [])[0]
-            if search_result['id']['kind'] == 'youtube#video':
-                video_title = search_result['snippet']
-                video_id = search_result['id']['videoId']
-                video_url = f'https://www.youtube.com/embed/{search_result["id"]["videoId"]}?autoplay=0'
-                videos.append(f'{video_title} \n({video_id}) \n{video_url}\n\n')
+            search_result = search_response.get('items')[0]
+            # if search_result['id']['kind'] == 'youtube#video':
+            video_title = search_result['snippet']
+            video_id = search_result['id']['videoId']
+            video_url = f'https://www.youtube.com/embed/{search_result["id"]["videoId"]}?autoplay=0'
+            videos.append(f'{video_title} \n({video_id}) \n{video_url}\n\n')
 
-                # elif search_result['id']['kind'] == 'youtube#channel':
-                #     channels.append('%s (%s)' % (search_result['snippet']['title'],
-                #                                 search_result['id']['channelId']))
-                # elif search_result['id']['kind'] == 'youtube#playlist':
-                #     playlists.append('%s (%s)' % (search_result['snippet']['title'],
-                #                                 search_result['id']['playlistId']))
+            # elif search_result['id']['kind'] == 'youtube#channel':
+            #     channels.append('%s (%s)' % (search_result['snippet']['title'],
+            #                                 search_result['id']['channelId']))
+            # elif search_result['id']['kind'] == 'youtube#playlist':
+            #     playlists.append('%s (%s)' % (search_result['snippet']['title'],
+            #                                 search_result['id']['playlistId']))
 
-                # print(f'Videos: {" ".join(videos)}')
-                
-                # print(f'Channels: {" ".join(channels)}')
-                # print(f'Playlists: {" ".join(playlists)}')
-
-                return video_url
+            # print(f'Videos: {" ".join(videos)}')
             
-            else:
+            # print(f'Channels: {" ".join(channels)}')
+            # print(f'Playlists: {" ".join(playlists)}')
 
-                return ""
+            return video_url
 
         except HttpError as e:
                 print(f'An HTTP error {e.resp.status} occurred:\n {e.content}')
                 return ""
                 
-        
-    

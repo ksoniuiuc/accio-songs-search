@@ -144,8 +144,8 @@ class SPOTIFY:
                 album_data = self.spotify_object.album(album_id=query)
                 track_api_data = album_data['tracks']['items']
             
-            # with open('data/tracks_all.json', 'w+') as data_file:
-            #     json.dump(spotify_data, data_file)
+            with open('tracks_all.json', 'w+') as data_file:
+                json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_track_data = []
@@ -180,8 +180,9 @@ class SPOTIFY:
                 track_data['artists'] = track['artists']
                 track_data['duration'] = round(float(track['duration_ms'])/60000, 2)
                 track_data['explicit'] = track['explicit']
-                track_data['spotify_url'] = track['external_urls']['spotify']
+                track_data['spotify_url'] = track['external_urls']['spotify'].replace('/track', '/embed/track')
                 track_data['preview_url'] = track['preview_url']
+                
                 
 
                 if track_data['duration'] > 0:
@@ -222,7 +223,7 @@ class SPOTIFY:
             track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
 
             ## Get YouTube URL
-            youtube_query = f"{track_data['name']} {track_data['album']}"
+            youtube_query = f"{track_name_genius} {track_artist_genius}"
             track_data['youtube_url'] = self.youtube_obj.youtube_search(youtube_query)
             
             # with open('data/lyrics.json', 'w+') as data_file:
