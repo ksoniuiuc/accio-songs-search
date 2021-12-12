@@ -67,10 +67,10 @@ class SPOTIFY:
         result = {}
         spotify_data = {}
         if search_type == 'artist-albums':
-            spotify_data = self.spotify_object.artist_albums(artist_id=query, limit=9)
+            spotify_data = self.spotify_object.artist_albums(artist_id=query, limit=20)
 
         elif search_type == 'album-tracks':
-            spotify_data = self.spotify_object.album_tracks(album_id=query, limit=9)
+            spotify_data = self.spotify_object.album_tracks(album_id=query)
             # with open('data/tracks_all.json', 'w+') as data_file:
             #     json.dump(spotify_data, data_file)
 
@@ -79,7 +79,7 @@ class SPOTIFY:
             #spotify_data = self.spotify_object.track(q=track_id, type='track', limit=1)
 
         else:            
-            spotify_data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=9)
+            spotify_data = self.spotify_object.search(q=query, type=search_type.rstrip('s'), limit=20)
         
         if 'artists' == search_type:            
             artists_api_data = spotify_data['artists']['items']
@@ -118,7 +118,7 @@ class SPOTIFY:
             print(f'Search Type = {search_type}')
 
             all_album_data = []
-            
+            duplicate_check = {}
             for album in album_api_data:
                 album_data = {}
                 album_data['type'] = 'album'
@@ -129,8 +129,12 @@ class SPOTIFY:
                 album_data['release_date'] = album['release_date']
                 album_data['total_tracks'] = album['total_tracks']
                 album_data['image'] = album['images'] #[0]['url'] if album['images'] else ""
+                
                 if album_data['total_tracks'] > 0:
-                    all_album_data.append(album_data)
+                    if album_data['name'].lower() not in duplicate_check or \
+                    duplicate_check[album_data['name'].lower()] != album_data['artists']:
+                        duplicate_check[album_data['name'].lower()] = album_data['artists']
+                        all_album_data.append(album_data)
             
             if all_album_data:
                 # with open('data/albums.json', 'w+') as data_file:
@@ -145,12 +149,13 @@ class SPOTIFY:
                 album_data = self.spotify_object.album(album_id=query)
                 track_api_data = album_data['tracks']['items']
             
-            # with open('tracks_all.json', 'w+') as data_file:
-            #     json.dump(spotify_data, data_file)
+            with open('tracks_all.json', 'w+') as data_file:
+                json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_track_data = []
             
+            duplicate_check = {}
             for track in track_api_data:
                 track_data = {}
                 track_data['type'] = 'track'
@@ -183,11 +188,17 @@ class SPOTIFY:
                 track_data['explicit'] = track['explicit']
                 track_data['spotify_url'] = track['external_urls']['spotify'].replace('/track', '/embed/track')
                 track_data['preview_url'] = track['preview_url']
+
                 
                 
 
                 if track_data['duration'] > 0:
-                    all_track_data.append(track_data)
+                    if track_data['name'].lower() not in duplicate_check or \
+                    duplicate_check[track_data['name'].lower()] != track_data['album'].lower() + str(len(track_data['artists'])):
+                        duplicate_check[track_data['name'].lower()] = track_data['album'].lower() + str(len(track_data['artists']))
+                
+                        all_track_data.append(track_data)
+                    
             
             if all_track_data:
                 session['track_data'] = all_track_data

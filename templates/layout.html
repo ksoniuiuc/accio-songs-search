@@ -24,11 +24,13 @@
 <body>
     <div class="bg">
         <div class="title">
-            {% if title %}
-            <span class="letters">Accio Songs - {{title}}</span>
-            {% else %}
-            <span class="letters">Accio Songs - Music Search</span>
-            {% endif %}
+            <a href="{{ url_for('home') }}">
+                {% if title %}
+                <span class="letters">Accio Songs - {{title}}</span>
+                {% else %}
+                <span class="letters">Accio Songs - Music Search</span>
+                {% endif %}
+            </a>
         </div>
         <div class="container">
             <div class="form">
@@ -94,7 +96,7 @@
                 </form>
             </div>
             <div class="results">
-                <p class="justify-center">{{ api_response }}</p>
+                <p class='title text-3xl mt-5 block justify-center' color="#fff">{{ api_response }}</p>
                 {% block content %}{% endblock %}
             </div>
         </div>

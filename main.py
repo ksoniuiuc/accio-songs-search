@@ -93,7 +93,9 @@ def artists(query):
                     "type": "artist"
                 }
             })
-            api_response = "Data Found" if api_response else ""
+
+        if len(data["results"]) > 0 or api_response != "": 
+            api_response = "Artists Summoned !!!"
             # with open('data/data.json', 'w+') as outfile:
             #     json.dump(data, outfile)
         #print(data['results'])
@@ -109,6 +111,7 @@ def artists(query):
 def albums(query):
     search_type = request.form['search_type']
     print(f'query {query}')
+    
     if query != "":
         data = client.search(engine_name, body={
             "query": query,
@@ -135,7 +138,10 @@ def albums(query):
                     "type": "album"
                 }
             })
-            api_response = "Data Found" if api_response else ""
+
+        print(len(data["results"]), api_response)
+        if len(data["results"]) > 0 or api_response != "": 
+            api_response = "Albums Summoned !!!"
             # with open('data/data.json', 'w+') as outfile:
             #     json.dump(data, outfile)
         #print(data['results'])
@@ -182,7 +188,9 @@ def artist_albums(artist_id):
                 "type": "album"
             }
         })
-        api_response = "Data Found" if api_response else ""
+    
+    if len(data["results"]) > 0 or api_response != "": 
+        api_response = "Albums Summoned !!!"
         # with open('data/data.json', 'w+') as outfile:
         #     json.dump(data, outfile)
     #print(data['results'])
@@ -229,7 +237,9 @@ def tracks(query):
                     "type": "track"
                 }
             })
-            api_response = "Data Found" if api_response else ""
+        
+        if len(data["results"]) > 0 or api_response != "": 
+            api_response = "Tracks Summoned !!!"
             # with open('data/data.json', 'w+') as outfile:
             #     json.dump(data, outfile)
         #print(data['results'])
@@ -278,7 +288,9 @@ def album_tracks(album_id):
                 ],
             }
         })
-        api_response = "Data Found" if api_response else ""
+    
+    if len(data["results"]) > 0 or api_response != "": 
+        api_response = "Tracks Summoned !!!"
         # with open('data/data.json', 'w+') as outfile:
         #     json.dump(data, outfile)
 
@@ -329,7 +341,9 @@ def track_details(track_id):
                 ],
             }
         })
-        api_response = "Data Found" if api_response else ""
+    
+    if len(data["results"]) > 0 or api_response != "": 
+        api_response = "Details Summoned !!!"
         # with open('data/data.json', 'w+') as outfile:
         #     json.dump(data, outfile)
 

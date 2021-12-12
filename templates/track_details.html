@@ -35,27 +35,27 @@
                     innerDiv.innerHTML += '<p>Oops!! No Preview</p><br/>';
                 }
                 
-                var audioVideoP = document.createElement('p');
-                audioVideoP.id = 'audioVideoP' + index;
+                var audioVideoDiv = document.createElement('div');
+                audioVideoDiv.id = 'audioVideoDiv' + index;
 
                 if (item.spotify_url.raw) {
-                    audioVideoP.innerHTML = '<br/><iframe title="Spotify Audio" src="'+item.spotify_url.raw+'" align="left" width="250" height="360" frameborder="1" allowtransparency="true" allow="encrypted-media"></iframe>';
+                    audioVideoDiv.innerHTML = '<br/><iframe title="Spotify Audio" src="'+item.spotify_url.raw+'" align="left" width="250" height="360" frameborder="1" allowtransparency="true" allow="encrypted-media"></iframe>';
                     
                 }
                 else {
-                    audioVideoP.innerHTML = '<br/><iframe title="Spotify Audio">Sorry!! Cannot Find Spotify Link</iframe>';
+                    audioVideoDiv.innerHTML = '<br/><iframe title="Spotify Audio">Sorry!! Cannot Find Spotify Link</iframe>';
                 }
                 
                 if (item.youtube_url.raw) {
-                    audioVideoP.innerHTML += '<iframe title="YouTube Video" id="ytplayer" align="right" width="600" height="360" src="' + item.youtube_url.raw + '" frameborder="1" allowtransparency="true" allow="encrypted-media"></iframe>';
+                    audioVideoDiv.innerHTML += '<iframe title="YouTube Video" id="ytplayer" align="left" width="600" height="360" src="' + item.youtube_url.raw + '" frameborder="1" allowtransparency="true" allow="encrypted-media"></iframe>';
 
                 }
                 else {
-                    audioVideoP.innerHTML += '<iframe title="YouTube Video">Sorry!! Cannot Find YouTube Video</iframe><br/><br/>';
+                    audioVideoDiv.innerHTML += '<iframe title="YouTube Video">Sorry!! Cannot Find YouTube Video</iframe><br/><br/>';
                 }
 
 
-                innerDiv.appendChild(audioVideoP);      
+                innerDiv.appendChild(audioVideoDiv);      
 
                 var lyricsDiv = document.createElement('div');
                 lyricsDiv.id = 'lyrics' + index;
