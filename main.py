@@ -125,7 +125,7 @@ def albums(query):
             }
         })
         api_response = ""
-        if not data["results"] or len(data["results"]) < 10:
+        if not data["results"] or len(data["results"]) < 20:
             api_response = get_api_data(query, search_type)
             data = client.search(engine_name, body={
                 "query": query,
@@ -139,7 +139,6 @@ def albums(query):
                 }
             })
 
-        print(len(data["results"]), api_response)
         if len(data["results"]) > 0 or api_response != "": 
             api_response = "Albums Summoned !!!"
             # with open('data/data.json', 'w+') as outfile:
@@ -172,7 +171,7 @@ def artist_albums(artist_id):
         }
     })
     api_response = ""
-    if not data["results"] or len(data["results"]) < 10:
+    if not data["results"] or len(data["results"]) < 20:
         api_response = get_api_data(artist_id, search_type)
         data = client.search(engine_name, body={
             "query": artist_id,
@@ -221,7 +220,7 @@ def tracks(query):
         })
 
         api_response = ""
-        if not data["results"] or len(data["results"]) < 10:
+        if not data["results"] or len(data["results"]) < 20:
             api_response = get_api_data(query, search_type)
             data = client.search(engine_name, body={
                 "query": query,
@@ -270,7 +269,7 @@ def album_tracks(album_id):
         }
     })
     api_response = ""
-    if not data["results"] or len(data["results"]) < 10:
+    if not data["results"] or len(data["results"]) < 20:
         print("Track HERE")
         print(album_id)
         api_response = get_api_data(album_id, search_type)
@@ -320,7 +319,6 @@ def track_details(track_id):
         }
     })
     
-    print(data["results"])
     api_response = ""
     if len(data["results"]) == 0 or ('lyrics' not in data["results"][0] or 'youtube_url' not in data["results"][0]):
         api_response = get_api_data(track_id, search_type)

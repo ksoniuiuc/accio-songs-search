@@ -214,7 +214,7 @@ class SPOTIFY:
             for item in track_json_data:
                 if item['id'] == query:
                     track = item
-            
+            print("Track", track)
             track_data = {}
             track_data['type'] = 'track'
             track_data['spotify_id'] = track['id']
@@ -230,8 +230,10 @@ class SPOTIFY:
             track_data['explicit'] = track['explicit']
             track_data['spotify_url'] = track['spotify_url']
             track_data['preview_url'] = track['preview_url']
+            
             track_name_genius = " ".join((track_data['name'].split('('))[:1])
             track_artist_genius = track['artists'][0]['name']
+
             track_data['lyrics'] = self.genius_obj.get_lyrics(track_name_genius, track_artist_genius)
 
             ## Get YouTube URL
