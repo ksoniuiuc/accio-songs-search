@@ -35,40 +35,42 @@
                 <form name="search_form" id="form" onSubmit="getAction()" method="POST">
                     <div class="inner-form">
                         <div class="input-field">
-                            <div class="second-wrap">
+                            <div class="first-wrap">
                                 <input name="search_input" id="form_input" type="text"
                                     placeholder="Search here..."></input>
                             </div>
-                            <div class="third-wrap">
-                                <button class="btn-search" type="submit" onClick="return validate()" >Search</button>
+                            <div class="second-wrap">
+                                <button class="btn-search" type="submit" onClick="return validate()">Search</button>
                             </div>
                         </div>
                     </div>
-                    <p>Select Search Type:</p>
-                    <div>
-                        <input type="radio" id="artists" name="search_type" value="artists">
-                        <label for="artist">Artists</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="albums" name="search_type" value="albums">
-                        <label for="track">Albums</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="tracks" name="search_type" value="tracks">
-                        <label for="track">Tracks</label>
+                    <div class="selection">
+                        <p>Select Search Type:</p>
+                        <div>
+                            <input type="radio" id="artists" name="search_type" value="artists">
+                            <label for="artist">Artists</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="albums" name="search_type" value="albums">
+                            <label for="track">Albums</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="tracks" name="search_type" value="tracks">
+                            <label for="track">Tracks</label>
+                        </div>
                     </div>
                     <script>
                         window.onload = setValue();
 
                         function getAction() {
-                            
-                                search_type_value = document.querySelector('input[name="search_type"]:checked').value;
-                                document.getElementById("form_input").name = search_type_value + "_form";
-                                var query = document.getElementById("form_input").value;
-                                console.log(search_type_value);
 
-                                document.getElementById("form").action = "/" + search_type_value + "/" + query;
-                            
+                            search_type_value = document.querySelector('input[name="search_type"]:checked').value;
+                            document.getElementById("form_input").name = search_type_value + "_form";
+                            var query = document.getElementById("form_input").value;
+                            console.log(search_type_value);
+
+                            document.getElementById("form").action = "/" + search_type_value + "/" + query;
+
                         };
 
                         function validate() {
