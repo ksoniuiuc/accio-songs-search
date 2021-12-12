@@ -353,24 +353,24 @@ h2 {
  */
 
  a:link {
-  color: green;
+  color: rgb(20, 31, 189);
   background-color: transparent;
   text-decoration: none;
 }
 a:visited {
-  color: pink;
+  color: rgb(34, 31, 31);
   background-color: transparent;
   text-decoration: none;
 }
 a:hover {
   color: red;
   background-color: transparent;
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 a:active {
   color: yellow;
   background-color: transparent;
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 
 /**
@@ -590,7 +590,9 @@ img {
 
 .border-gray-300 {
   --tw-border-opacity: 1;
+  --tw-bg-opacity: 0.5;
   border-color: rgba(209, 213, 219, var(--tw-border-opacity));
+  background-color:rgba(255, 255, 255, 0.5);
 }
 
 .border-gray-700 {
@@ -609,7 +611,7 @@ img {
 }
 
 .hover\:bg-blue-400:hover {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.5;
   background-color: rgba(96, 165, 250, var(--tw-bg-opacity));
 }
 
@@ -673,6 +675,11 @@ img {
 .text-white {
   --tw-text-opacity: 1;
   color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgba(0, 0, 0, var(--tw-text-opacity));
 }
 
 .text-gray-800 {

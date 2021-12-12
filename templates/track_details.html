@@ -19,6 +19,7 @@
                 newDiv.className = 'transition duration-500 ease-in-out flex py-3 px-2 hover:bg-blue-400 transform hover:-translate-y-1 hover:scale-110 hover:text-white hover:shadow-none hover:rounded border border-gray-300 shadow-lg';
                 newDiv.innerHTML = '<img id="artist_image" src="' + item.image.raw + '" class="h-16 w-12 mr-20 ml-10 mt-14" alt="Image">';
                 var innerDiv = document.createElement('div');
+                innerDiv.className = "text-gray-800"
                 innerDiv.id = 'inner-div' + index;
                 innerDiv.className = 'w-3/5 mr-0';
                 innerDiv.innerHTML = '<h2 class="text-3xl font-bold">' + item.name.raw + '</h2><br/>';
@@ -56,7 +57,7 @@
 
                 innerDiv.appendChild(audioVideoP);      
 
-                var lyricsDiv = document.createElement('p');
+                var lyricsDiv = document.createElement('div');
                 lyricsDiv.id = 'lyrics' + index;
                 lyricsDiv.innerHTML = '<br/><br/><p><strong><u>Lyrics:</strong></u></p>';
                 lyricsDiv.innerHTML += '<br/><pre class="pre"><code>' + item.lyrics.raw + '<code></pre>';

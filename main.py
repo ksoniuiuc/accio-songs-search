@@ -3,7 +3,6 @@ import json
 from elastic_enterprise_search import AppSearch
 from flask import Flask, session, render_template, request
 from flask_session import Session
-import requests
 import time
 import uuid
 import spotipy
@@ -64,7 +63,6 @@ def home():
 
 @app.route("/artists/<query>", methods=['GET', 'POST'])
 def artists(query):
-    print("Here")
     print(f'query {query}')
     print(f'request.form {request.form}')
     search_type = request.form['search_type']
@@ -310,8 +308,9 @@ def track_details(track_id):
         }
     })
     
+    print(data["results"])
     api_response = ""
-    if track_id not in (data["results"][0]['spotify_id']['raw']):
+    if len(data["results"]) == 0 or ('lyrics' not in data["results"][0] or 'youtube_url' not in data["results"][0]):
         api_response = get_api_data(track_id, search_type)
         data = client.search(engine_name, body={
             "query": "",

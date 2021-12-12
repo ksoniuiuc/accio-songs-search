@@ -63,7 +63,7 @@ class SPOTIFY:
             print("TOKEN EXPIRED !!!!")
             self.refresh()
         
-        print(query, search_type, session)
+        #print(query, search_type, session)
         result = {}
         spotify_data = {}
         if search_type == 'artist-albums':
@@ -187,7 +187,6 @@ class SPOTIFY:
                 
 
                 if track_data['duration'] > 0:
-                    print("HERE")
                     all_track_data.append(track_data)
             
             if all_track_data:
@@ -200,7 +199,6 @@ class SPOTIFY:
             # with open('data/tracks.json') as f:
             #     track_json_data = json.load(f)
             track_json_data = session['track_data']
-            session.pop('track_data', None)
             track = {}
             for item in track_json_data:
                 if item['id'] == query:

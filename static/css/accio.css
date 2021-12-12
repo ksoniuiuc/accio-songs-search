@@ -4,7 +4,7 @@
 }
 
 body, html {
-    height: 120%;
+    height: 200%;
     
  }
 
@@ -61,7 +61,6 @@ body .bg {
     margin-right:25%;
     width: 20%;
     text-align: left;
-    z-index:100;
     
 }
 
@@ -109,7 +108,7 @@ body .bg {
 .container form .inner-form .input-field .third-wrap .btn-search {
   font-weight: 300;
   height: 100%;
-  width: 100%;
+  width: 170px;
   white-space: nowrap;
   font-size: 20px;
   color: #fff;
@@ -218,28 +217,28 @@ body .bg {
 
 @keyframes color-changer {
     33% {
-        color: #FFC500;
+        color: #ff1e1e;
     }
 
     66% {
-        color: #740001;
+        color: #53d23a;
     }
 
     100% {
-        color: #FFC500;
+        color: #eec438;
     }
 }
 
 @-webkit-keyframes color-changer {
     33% {
-        color: #FFC500;
+        color: #ff1e1e;
     }
 
     66% {
-        color: #740001;
+        color: #53d23a;
     }
 
     100% {
-        color: #FFC500;
+        color: #eec438;
     }
 }
