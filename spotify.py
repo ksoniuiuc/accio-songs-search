@@ -149,8 +149,8 @@ class SPOTIFY:
                 album_data = self.spotify_object.album(album_id=query)
                 track_api_data = album_data['tracks']['items']
             
-            with open('tracks_all.json', 'w+') as data_file:
-                json.dump(spotify_data, data_file)
+            # with open('tracks_all.json', 'w+') as data_file:
+            #     json.dump(spotify_data, data_file)
             print(f'Search Type = {search_type}')
 
             all_track_data = []
